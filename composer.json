@@ -19,6 +19,7 @@
         "symfony/dotenv": "7.1.*",
         "symfony/flex": "^2",
         "symfony/framework-bundle": "7.1.*",
+        "symfony/maker-bundle": "^1.60",
         "symfony/monolog-bundle": "^3.10",
         "symfony/property-access": "7.1.*",
         "symfony/property-info": "7.1.*",
@@ -80,7 +81,6 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^3.59",
-        "symfony/maker-bundle": "^1.60",
         "symfony/var-dumper": "7.1.*"
     }
 }
