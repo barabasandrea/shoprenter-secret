@@ -6,43 +6,43 @@ info:
 host: "api.your-secret-server.com"
 basePath: "/v1"
 tags:
-- name: "secret"
-  externalDocs:
-    description: "Find out more"
-    url: "http://swagger.io"
+  - name: "secret"
+    externalDocs:
+      description: "Find out more"
+      url: "http://swagger.io"
 schemes:
-- "http"
+  - "http"
 paths:
   /secret:
     post:
       tags:
-      - "secret"
+        - "secret"
       summary: "Add a new secret"
       description: ""
       operationId: "addSecret"
       consumes:
-      - "application/x-www-form-urlencoded"
+        - "application/x-www-form-urlencoded"
       produces:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
+        - "application/xml"
       parameters:
-      - in: "formData"
-        name: "secret"
-        description: "This text will be saved as a secret"
-        required: true
-        type: "string"
-      - in: "formData"
-        name: "expireAfterViews"
-        description: "The secret won't be available after the given number of views. It must be greater than 0."
-        required: true
-        type: "integer"
-        format: "int32"
-      - in: "formData"
-        name: "expireAfter"
-        description: "The secret won't be available after the given time. The value is provided in minutes. 0 means never expires"
-        required: true
-        type: "integer"
-        format: "int32"
+        - in: "formData"
+          name: "secret"
+          description: "This text will be saved as a secret"
+          required: true
+          type: "string"
+        - in: "formData"
+          name: "expireAfterViews"
+          description: "The secret won't be available after the given number of views. It must be greater than 0."
+          required: true
+          type: "integer"
+          format: "int32"
+        - in: "formData"
+          name: "expireAfter"
+          description: "The secret won't be available after the given time. The value is provided in minutes. 0 means never expires"
+          required: true
+          type: "integer"
+          format: "int32"
       responses:
         200:
           description: "successful operation"
@@ -50,23 +50,23 @@ paths:
             $ref: "#/definitions/Secret"
         405:
           description: "Invalid input"
-          
+
   /secret/{hash}:
     get:
       tags:
-      - "secret"
+        - "secret"
       summary: "Find a secret by hash"
       description: "Returns a single secret"
       operationId: "getSecretByHash"
       produces:
-      - "application/json"
-      - "application/xml"
+        - "application/json"
+        - "application/xml"
       parameters:
-      - name: "hash"
-        in: "path"
-        description: "Unique hash to identify the secret"
-        required: true
-        type: "string"
+        - name: "hash"
+          in: "path"
+          description: "Unique hash to identify the secret"
+          required: true
+          type: "string"
       responses:
         200:
           description: "successful operation"

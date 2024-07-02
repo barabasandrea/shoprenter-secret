@@ -46,7 +46,27 @@ class SecretController extends AbstractController
         ]);
     }
 
-    #[Route('/v1/secret/{hash}', name: 'get_secret_by_hash', methods: ['GET'])]
+    /**
+     * @OA\Get(
+     *     path="/v1/secret/{hash}",
+     *     summary="Find a secret by hash",
+     *     description="Returns a single secret based on the provided hash",
+     *     @OA\Parameter(
+     *         name="hash",
+     *         in="path",
+     *         required=true,
+     *         @OA\Schema(type="string")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         @OA\JsonContent(ref="#/components/schemas/Secret")
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *     )
+     * )
+     * @Route("/v1/secret/{hash}", name="get_secret_by_hash", methods={"GET"})
+     */
     public function getSecretByHash(string $hash, EntityManagerInterface $entityManager): Response
     {
         $secret = $entityManager->getRepository(Secret::class)->findOneBy(['hash' => $hash]);
