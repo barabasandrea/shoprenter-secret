@@ -16,28 +16,19 @@ class SecretRepository extends ServiceEntityRepository
         parent::__construct($registry, Secret::class);
     }
 
-//    /**
-//     * @return Secret[] Returns an array of Secret objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findOneActiveSecretByHash(string $hash): ?Secret
+    {
+        $qb = $this->createQueryBuilder('s');
 
-//    public function findOneBySomeField($value): ?Secret
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+        $currentDate = new \DateTime();
+
+        return $qb->select('s')
+            ->where('s.hash = :hash')
+            ->andWhere($qb->expr()->gt('s.expiresAt', ':currentDate'))
+            ->andWhere($qb->expr()->gt('s.remainingViews', 0))
+            ->setParameter('hash', $hash)
+            ->setParameter('currentDate', $currentDate)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

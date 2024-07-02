@@ -2,97 +2,103 @@
 
 namespace App\Controller;
 
-use App\Entity\Secret;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Handler\AddSecretHandler;
+use App\Handler\SecretHandler;
+use App\Request\AddSecretRequest;
+use App\Request\SecretRequest;
+use App\Service\SecretService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\HttpFoundation\Response;
 
-class SecretController extends AbstractController
+class SecretController
 {
-    #[Route('/v1/secret', name: 'add_secret', methods: ['POST'])]
-    public function addSecret(Request $request, EntityManagerInterface $entityManager): Response
+    private AddSecretHandler $addSecretHandler;
+    private SecretHandler $secretHandler;
+    private SerializerInterface $serializer;
+    private SecretService $secretService;
+
+    public function __construct(
+        AddSecretHandler $addSecretHandler,
+        SecretHandler $secretHandler,
+        SerializerInterface $serializer,
+        SecretService $secretService
+    )
     {
-        $secretText = $request->request->get('secret');
-        $expireAfterViews = $request->request->get('expireAfterViews');
-        $expireAfter = $request->request->get('expireAfter');
+        $this->addSecretHandler = $addSecretHandler;
+        $this->secretHandler = $secretHandler;
+        $this->serializer = $serializer;
+        $this->secretService = $secretService;
+    }
 
-        if (!$secretText || !$expireAfterViews || $expireAfterViews <= 0) {
-            return $this->json(['error' => 'Invalid input'], Response::HTTP_BAD_REQUEST);
+
+    /**
+     * @Route("/secret", methods={"POST"})
+     */
+    public function addSecret(Request $request): Response
+    {
+        $addSecretRequest = new AddSecretRequest();
+        $secret = $request->get('secret');
+
+        if ($this->secretService->findOneActiveSecretByHash($secret) !== null) {
+            return new JsonResponse(['message' => 'The key already exist'], Response::HTTP_CONFLICT);
         }
 
-        $secret = new Secret();
-        $secret->setHash(Uuid::v4());
-        $secret->setSecretText($secretText);
-        $secret->setCreatedAt(new \DateTime());
-        $secret->setRemainingViews($expireAfterViews);
+        $addSecretRequest->setSecret($secret);
+        $addSecretRequest->setExpireAfterViews((int)$request->get('expireAfterViews'));
+        $addSecretRequest->setExpireAfter((int)$request->get('expireAfter'));
 
-        if ($expireAfter > 0) {
-            $secret->setExpiresAt((new \DateTime())->modify("+$expireAfter minutes"));
-        }
+        $secretResponse = $this->addSecretHandler->handle($addSecretRequest);
 
-        $entityManager->persist($secret);
-        $entityManager->flush();
+        $format = $this->getFormatFromRequest($request);
+        $serializedContent = $this->serializer->serialize($secretResponse, $format);
 
-        return $this->json([
-            'hash' => $secret->getHash(),
-            'secretText' => $secret->getSecretText(),
-            'createdAt' => $secret->getCreatedAt(),
-            'expiresAt' => $secret->getExpiresAt(),
-            'remainingViews' => $secret->getRemainingViews()
-        ]);
+        $response = new Response($serializedContent);
+        $response->headers->set('Content-Type', $this->getContentTypeFromFormat($format));
+
+        return $response;
     }
 
     /**
-     * @OA\Get(
-     *     path="/v1/secret/{hash}",
-     *     summary="Find a secret by hash",
-     *     description="Returns a single secret based on the provided hash",
-     *     @OA\Parameter(
-     *         name="hash",
-     *         in="path",
-     *         required=true,
-     *         @OA\Schema(type="string")
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         @OA\JsonContent(ref="#/components/schemas/Secret")
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *     )
-     * )
-     * @Route("/v1/secret/{hash}", name="get_secret_by_hash", methods={"GET"})
+     * @Route("/secret/{hash}", methods={"GET"})
      */
-    public function getSecretByHash(string $hash, EntityManagerInterface $entityManager): Response
+    public function getSecretByHash(Request $request): Response
     {
-        $secret = $entityManager->getRepository(Secret::class)->findOneBy(['hash' => $hash]);
+        $secretRequest = new secretRequest();
+        $secretRequest->setHash((string)$request->get('hash'));
 
-        if (!$secret) {
-            return $this->json(['error' => 'Secret not found'], Response::HTTP_NOT_FOUND);
+        $secretResponse = $this->secretHandler->handle($secretRequest);
+
+        if ($secretResponse === null) {
+            return new JsonResponse(['message' => 'Secret not found'], Response::HTTP_NOT_FOUND);
         }
 
-        if ($secret->getExpiresAt() && $secret->getExpiresAt() < new \DateTime()) {
-            return $this->json(['error' => 'Secret has expired'], Response::HTTP_NOT_FOUND);
+        $format = $this->getFormatFromRequest($request);
+        $serializedContent = $this->serializer->serialize($secretResponse, $format);
+
+        $response = new Response($serializedContent);
+        $response->headers->set('Content-Type', $this->getContentTypeFromFormat($format));
+
+        return $response;
+    }
+
+    private function getFormatFromRequest(Request $request): string
+    {
+        $preferredFormat = $request->getPreferredFormat();
+        return $preferredFormat ?: 'json';
+    }
+
+    private function getContentTypeFromFormat(string $format): string
+    {
+        switch ($format) {
+            case 'json':
+                return 'application/json';
+            case 'xml':
+                return 'application/xml';
+            default:
+                throw new \InvalidArgumentException('Unsupported format: ' . $format);
         }
-
-        if ($secret->getRemainingViews() <= 0) {
-            return $this->json(['error' => 'Secret has expired'], Response::HTTP_NOT_FOUND);
-        }
-
-        $secret->setRemainingViews($secret->getRemainingViews() - 1);
-        $entityManager->flush();
-
-        return $this->json([
-            'hash' => $secret->getHash(),
-            'secretText' => $secret->getSecretText(),
-            'createdAt' => $secret->getCreatedAt(),
-            'expiresAt' => $secret->getExpiresAt(),
-            'remainingViews' => $secret->getRemainingViews()
-        ]);
     }
 }
-
