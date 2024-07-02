@@ -1,3 +1,17 @@
+index:
+    path: /
+    controller: App\Controller\IndexController::index
+
+get_secret:
+    path: /secret/{hash}
+    controller: App\Controller\IndexController::getSecretByHash
+    methods: ['GET']
+
+submit_secret:
+    path: /submit-secret
+    controller: App\Controller\IndexController::submitSecret
+    methods: ['POST']
+
 add_secret:
     path: /v1/secret
     controller: App\Controller\SecretController::addSecret
@@ -7,3 +21,10 @@ get_secret_by_hash:
     path: /v1/secret/{hash}
     controller: App\Controller\SecretController::getSecretByHash
     methods: ['GET']
+
+swagger:
+    path: /swagger
+    controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
+    defaults:
+        path: /swagger/index.html
+        permanent: true

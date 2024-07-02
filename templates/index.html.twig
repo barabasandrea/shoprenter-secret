@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Secret Form</title>
+</head>
+<body>
+<h1>Add a Secret</h1>
+<form action="{{ path('submit_secret') }}" method="POST">
+    <label for="secret">Secret:</label>
+    <input type="text" id="secret" name="secret" required>
+    <br>
+    <label for="expireAfterViews">Expire After Views:</label>
+    <input type="number" id="expireAfterViews" name="expireAfterViews" required>
+    <br>
+    <label for="expireAfter">Expire After (minutes):</label>
+    <input type="number" id="expireAfter" name="expireAfter" required>
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+{% if data is defined %}
+    <h2>Response</h2>
+    <pre>{{ data|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
+{% endif %}
+</body>
+</html>
