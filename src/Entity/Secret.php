@@ -27,21 +27,9 @@ class Secret
     #[ORM\Column(type: 'integer')]
     private ?int $remainingViews;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getHash(): ?string
-    {
-        return $this->hash;
-    }
-
-    public function setHash(string $hash): self
+    public function setHash(?string $hash): void
     {
         $this->hash = $hash;
-
-        return $this;
     }
 
     public function getSecretText(): ?string
@@ -49,11 +37,9 @@ class Secret
         return $this->secretText;
     }
 
-    public function setSecretText(string $secretText): self
+    public function setSecretText(?string $secretText): void
     {
         $this->secretText = $secretText;
-
-        return $this;
     }
 
     public function getCreatedAt(): ?\DateTimeInterface
@@ -61,11 +47,9 @@ class Secret
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(?\DateTimeInterface $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getExpiresAt(): ?\DateTimeInterface
@@ -73,11 +57,9 @@ class Secret
         return $this->expiresAt;
     }
 
-    public function setExpiresAt(?\DateTimeInterface $expiresAt): self
+    public function setExpiresAt(?\DateTimeInterface $expiresAt): void
     {
         $this->expiresAt = $expiresAt;
-
-        return $this;
     }
 
     public function getRemainingViews(): ?int
@@ -85,11 +67,9 @@ class Secret
         return $this->remainingViews;
     }
 
-    public function setRemainingViews(int $remainingViews): self
+    public function setRemainingViews(?int $remainingViews): void
     {
         $this->remainingViews = $remainingViews;
-
-        return $this;
     }
 }
 
