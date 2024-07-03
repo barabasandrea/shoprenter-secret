@@ -72,12 +72,19 @@
             })
             .then(data => {
                 let responseDiv = document.getElementById('response');
+
                 if (typeof data === 'object' && data.error) {
                     responseDiv.innerHTML = '<p class="error">' + data.error + '</p>';
-                } else if (format === 'xml') {
-                    responseDiv.innerHTML = '<p>Secret submitted successfully (XML): ' + data + '</p>';
                 } else {
-                    responseDiv.innerHTML = '<p>Secret submitted successfully (JSON): ' + data + '</p>';
+                    let responseText = '';
+
+                    if (format === 'xml') {
+                        responseText = '<p>Secret submitted successfully (XML): ' + data + '</p>';
+                    } else {
+                        responseText = '<p>Secret submitted successfully (JSON): ' + data + '</p>';
+                    }
+
+                    responseDiv.innerHTML = responseText;
                 }
             })
             .catch(error => {
