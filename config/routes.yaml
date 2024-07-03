@@ -22,5 +22,5 @@ swagger:
     path: /swagger
     controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController::urlRedirectAction
     defaults:
-        path: /swagger/index.html
+        path: swagger.html
         permanent: true
