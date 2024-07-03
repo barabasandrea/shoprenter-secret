@@ -1,0 +1,14 @@
+framework:
+    serializer:
+        enabled: true
+        mapping:
+            paths: ['%kernel.project_dir%/config/serializer']
+        default_context:
+            json:
+                enable_max_depth: true
+                enable_annotations: true
+                pretty_print: true
+            xml:
+                enable_max_depth: true
+                enable_annotations: true
+                pretty_print: true
