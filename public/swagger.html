@@ -31,8 +31,10 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/3.52.0/swagger-ui-standalone-preset.js"></script>
 <script>
     window.onload = function () {
+        const swaggerUrl = window.location.protocol + '//' + window.location.host + '/swagger.yaml';
+
         const ui = SwaggerUIBundle({
-            url: "swagger.yaml",
+            url: swaggerUrl,
             dom_id: '#swagger-ui',
             presets: [
                 SwaggerUIBundle.presets.apis,
