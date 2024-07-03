@@ -35,7 +35,7 @@ class SecretController
 
 
     /**
-     * @Route("/v1/secret", methods={"POST"})
+     * @Route("/v1/secret", name="add_secret", methods={"POST"})
      */
     public function addSecret(Request $request): Response
     {
@@ -62,7 +62,7 @@ class SecretController
     }
 
     /**
-     * @Route("/v1/secret/{hash}", methods={"GET"})
+     * @Route("/v1/secret/{hash}", name="get_secret_by_hash", methods={"GET"})
      */
     public function getSecretByHash(Request $request): Response
     {
