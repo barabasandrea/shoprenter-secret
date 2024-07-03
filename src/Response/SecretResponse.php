@@ -3,7 +3,7 @@
 namespace App\Response;
 
 
-use App\Resource\View\SecretItem;
+use App\Resources\View\SecretItem;
 
 class SecretResponse
 {

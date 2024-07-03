@@ -15,3 +15,10 @@
 ###< friendsofphp/php-cs-fixer ###
 /.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd
 /.idea/commandlinetools/Symfony_7_2_24__10_56_AM.xml
+
+###> symfony/webpack-encore-bundle ###
+/node_modules/
+/public/build/
+npm-debug.log
+yarn-error.log
+###< symfony/webpack-encore-bundle ###

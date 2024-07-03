@@ -1,27 +1,90 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Secret Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+    <title>Secret App</title>
 </head>
 <body>
-<h1>Add a Secret</h1>
-<form action="{{ path('submit_secret') }}" method="POST">
-    <label for="secret">Secret:</label>
-    <input type="text" id="secret" name="secret" required>
-    <br>
-    <label for="expireAfterViews">Expire After Views:</label>
-    <input type="number" id="expireAfterViews" name="expireAfterViews" required>
-    <br>
-    <label for="expireAfter">Expire After (minutes):</label>
-    <input type="number" id="expireAfter" name="expireAfter" required>
-    <br>
-    <button type="submit">Submit</button>
-</form>
+<div class="container">
+    <h1>Welcome to the Secret App</h1>
+    <form id="secretForm">
+        <div>
+            <label for="secret">Secret:</label>
+            <input type="text" id="secret" name="secret" required>
+        </div>
+        <div>
+            <label for="expireAfterViews">Expire After Views:</label>
+            <input type="number" id="expireAfterViews" name="expireAfterViews" required>
+        </div>
+        <div>
+            <label for="expireAfter">Expire After (minutes):</label>
+            <input type="number" id="expireAfter" name="expireAfter" required>
+        </div>
+        <div>
+            <label for="format">Format:</label>
+            <select id="format" name="format" required>
+                <option value="json">JSON</option>
+                <option value="xml">XML</option>
+            </select>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="response"></div>
+</div>
 
-{% if data is defined %}
-    <h2>Response</h2>
-    <pre>{{ data|json_encode(constant('JSON_PRETTY_PRINT')) }}</pre>
-{% endif %}
+<script>
+    document.getElementById('secretForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(this);
+        const format = formData.get('format');
+
+        let headers = {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Accept': `application/${format}`,
+        };
+
+        fetch('/v1/add-secret', {
+            method: 'POST',
+            headers: headers,
+            body: new URLSearchParams(formData).toString(),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to submit secret. Please try again later.');
+                }
+
+                const contentType = response.headers.get('Content-Type');
+                if (contentType.includes('application/json')) {
+                    return response.text();
+                } else if (contentType.includes('application/xml')) {
+                    return response.text();
+                } else {
+                    throw new Error('Unexpected response format');
+                }
+            })
+            .then(data => {
+                let responseDiv = document.getElementById('response');
+                if (typeof data === 'object' && data.error) {
+                    responseDiv.innerHTML = '<p class="error">' + data.error + '</p>';
+                } else if (format === 'xml') {
+                    responseDiv.innerHTML = '<p>Secret submitted successfully (XML): ' + data + '</p>';
+                } else {
+                    responseDiv.innerHTML = '<p>Secret submitted successfully (JSON): ' + data + '</p>';
+                }
+            })
+            .catch(error => {
+                document.getElementById('response').innerHTML = '<p class="error">' + error.message + '</p>';
+            });
+    });
+</script>
 </body>
 </html>

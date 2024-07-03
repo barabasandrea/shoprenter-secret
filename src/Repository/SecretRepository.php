@@ -27,7 +27,7 @@ class SecretRepository extends ServiceEntityRepository
             ->andWhere($qb->expr()->gt('s.expiresAt', ':currentDate'))
             ->andWhere($qb->expr()->gt('s.remainingViews', 0))
             ->setParameter('hash', $hash)
-            ->setParameter('currentDate', $currentDate)
+            ->setParameter('currentDate', $currentDate->format('Y-m-d H:i:s'))
             ->getQuery()
             ->getOneOrNullResult();
     }

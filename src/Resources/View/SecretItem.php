@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Resource\View;
+namespace App\Resources\View;
 
 class SecretItem
 {

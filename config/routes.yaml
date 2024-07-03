@@ -1,24 +1,20 @@
 index:
     path: /
     controller: App\Controller\IndexController::index
+    methods: ['GET']
 
-get_secret:
+secret_by_hash:
     path: /secret/{hash}
     controller: App\Controller\IndexController::getSecretByHash
     methods: ['GET']
 
-submit_secret:
-    path: /submit-secret
-    controller: App\Controller\IndexController::submitSecret
-    methods: ['POST']
-
 add_secret:
-    path: /v1/secret
+    path: /v1/add-secret
     controller: App\Controller\SecretController::addSecret
     methods: ['POST']
 
 get_secret_by_hash:
-    path: /v1/secret/{hash}
+    path: /v1/get-secret/{hash}
     controller: App\Controller\SecretController::getSecretByHash
     methods: ['GET']
 

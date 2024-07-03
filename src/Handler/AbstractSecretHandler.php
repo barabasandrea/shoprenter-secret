@@ -3,7 +3,7 @@
 namespace App\Handler;
 
 use App\Entity\Secret;
-use App\Resource\View\SecretItem;
+use App\Resources\View\SecretItem;
 use App\Response\SecretResponse;
 
 abstract class AbstractSecretHandler
