@@ -8,8 +8,6 @@ framework:
 
     #esi: true
     #fragments: true
-    error_handler:
-        debug: true
 
 when@test:
     framework:
