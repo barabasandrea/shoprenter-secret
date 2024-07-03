@@ -9,12 +9,12 @@ secret_by_hash:
     methods: ['GET']
 
 add_secret:
-    path: /v1/add-secret
+    path: /v1/secret
     controller: App\Controller\SecretController::addSecret
     methods: ['POST']
 
 get_secret_by_hash:
-    path: /v1/get-secret/{hash}
+    path: /v1/secret/{hash}
     controller: App\Controller\SecretController::getSecretByHash
     methods: ['GET']
 

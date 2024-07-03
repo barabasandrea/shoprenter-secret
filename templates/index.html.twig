@@ -52,7 +52,7 @@
             'Accept': `application/${format}`,
         };
 
-        fetch('/v1/add-secret', {
+        fetch('/v1/secret', {
             method: 'POST',
             headers: headers,
             body: new URLSearchParams(formData).toString(),
