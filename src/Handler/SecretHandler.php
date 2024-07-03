@@ -39,5 +39,4 @@ class SecretHandler extends AbstractSecretHandler
         $this->entityManager->flush();
     }
 
-
 }

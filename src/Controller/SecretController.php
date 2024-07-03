@@ -2,9 +2,9 @@
 
 namespace App\Controller;
 
-use App\Handler\AddSecretHandler;
+use App\Handler\NewSecretHandler;
 use App\Handler\SecretHandler;
-use App\Request\AddSecretRequest;
+use App\Request\NewSecretRequest;
 use App\Request\SecretRequest;
 use App\Service\SecretService;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -15,16 +15,16 @@ use Symfony\Component\HttpFoundation\Response;
 
 class SecretController
 {
-    private AddSecretHandler $addSecretHandler;
+    private NewSecretHandler $addSecretHandler;
     private SecretHandler $secretHandler;
     private SerializerInterface $serializer;
     private SecretService $secretService;
 
     public function __construct(
-        AddSecretHandler $addSecretHandler,
-        SecretHandler $secretHandler,
+        NewSecretHandler    $addSecretHandler,
+        SecretHandler       $secretHandler,
         SerializerInterface $serializer,
-        SecretService $secretService
+        SecretService       $secretService
     )
     {
         $this->addSecretHandler = $addSecretHandler;
@@ -39,7 +39,7 @@ class SecretController
      */
     public function addSecret(Request $request): Response
     {
-        $addSecretRequest = new AddSecretRequest();
+        $addSecretRequest = new NewSecretRequest();
         $secret = $request->get('secret');
 
         if ($this->secretService->findOneActiveSecretByHash($secret) !== null) {

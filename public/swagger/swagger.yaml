@@ -90,7 +90,7 @@ definitions:
         format: "int32"
         description: "The time after which the secret expires in minutes."
     xml:
-      name: "AddSecretRequest"
+      name: "NewSecretRequest"
   SecretResponse:
     type: "object"
     properties:

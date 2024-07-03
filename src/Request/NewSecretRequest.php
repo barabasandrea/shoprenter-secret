@@ -2,7 +2,7 @@
 
 namespace App\Request;
 
-class AddSecretRequest
+class NewSecretRequest
 {
     /**
      * @Assert\NotBlank

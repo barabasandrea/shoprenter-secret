@@ -63,13 +63,12 @@
                 }
 
                 const contentType = response.headers.get('Content-Type');
-                if (contentType.includes('application/json')) {
+
+                if (contentType.includes('application/json') || contentType.includes('application/xml')) {
                     return response.text();
-                } else if (contentType.includes('application/xml')) {
-                    return response.text();
-                } else {
-                    throw new Error('Unexpected response format');
                 }
+
+                throw new Error('Unexpected response format');
             })
             .then(data => {
                 let responseDiv = document.getElementById('response');
