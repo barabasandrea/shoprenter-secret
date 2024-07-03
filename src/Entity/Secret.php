@@ -12,10 +12,10 @@ class Secret
     #[ORM\Column(type: 'integer')]
     private int $id;
 
-    #[ORM\Column(type: 'string', unique: true)]
+    #[ORM\Column(type: 'string', length: 32, unique: true)]
     private ?string $hash;
 
-    #[ORM\Column(type: 'text')]
+    #[ORM\Column(type: 'string', length: 32, nullable: true)]
     private ?string $secretText;
 
     #[ORM\Column(type: 'datetime')]

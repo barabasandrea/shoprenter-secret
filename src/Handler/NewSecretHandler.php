@@ -27,7 +27,7 @@ class NewSecretHandler extends AbstractSecretHandler
     {
         $secret = new Secret();
         $secret->setSecretText($request->getSecret());
-        $secret->setHash(base64_encode($request->getSecret()));
+        $secret->setHash(md5($request->getSecret()));
         $secret->setCreatedAt(new \DateTime());
         $secret->setRemainingViews($request->getExpireAfterViews());
         $secret->setExpiresAt($request->getExpireAfter() > 0 ? (new \DateTime())->modify('+ ' . $request->getExpireAfter() . ' minutes') : null);
