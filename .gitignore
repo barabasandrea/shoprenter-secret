@@ -19,6 +19,6 @@
 /node_modules/
 npm-debug.log
 yarn-error.log
-###< symfony/webpack-encore-bundle ###
+
 /.idea/php.xml
 /.idea/vcs.xml
