@@ -17,4 +17,9 @@ class SecretService
     {
         return $this->secretRepository->findOneActiveSecretByHash($hash);
     }
+
+    public function findBySecretText(string $secretText): ?Secret
+    {
+        return $this->secretRepository->findBySecretText($secretText);
+    }
 }

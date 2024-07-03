@@ -42,7 +42,7 @@ class SecretController
         $addSecretRequest = new NewSecretRequest();
         $secret = $request->get('secret');
 
-        if ($this->secretService->findOneActiveSecretByHash($secret) !== null) {
+        if ($this->secretService->findBySecretText($secret) !== null) {
             return new JsonResponse(['message' => 'The key already exist'], Response::HTTP_CONFLICT);
         }
 

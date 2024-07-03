@@ -31,4 +31,15 @@ class SecretRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findBySecretText(string $secretText): ?Secret
+    {
+        $qb = $this->createQueryBuilder('s');
+
+        return $qb->select('s')
+            ->where('s.hash = :hash')
+            ->setParameter('hash', md5($secretText))
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
