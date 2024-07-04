@@ -7,14 +7,16 @@ use App\Request\SecretRequest;
 use App\Response\SecretResponse;
 use App\Service\SecretService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class SecretHandler extends AbstractSecretHandler
 {
     private SecretService $secretService;
     private EntityManagerInterface $entityManager;
 
-    public function __construct(SecretService $secretService, EntityManagerInterface $entityManager)
+    public function __construct(UrlGeneratorInterface $urlGenerator, SecretService $secretService, EntityManagerInterface $entityManager)
     {
+        parent::__construct($urlGenerator);
         $this->secretService = $secretService;
         $this->entityManager = $entityManager;
     }

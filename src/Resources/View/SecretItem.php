@@ -24,11 +24,27 @@ class SecretItem
      */
     public int $remainingViews;
 
-    public function __construct(string $secretText, \DateTimeInterface $createdAt, \DateTimeInterface $expiresAt, int $remainingViews)
+
+    /**
+     * @SerializedName("secret_url")
+     */
+    public string $secretUrl;
+
+
+    public function __construct(
+        string $secretText,
+        \DateTimeInterface $createdAt,
+        \DateTimeInterface $expiresAt,
+        int $remainingViews,
+        string $secretUrl
+    )
     {
         $this->secretText = $secretText;
         $this->createdAt = $createdAt;
         $this->expiresAt = $expiresAt;
         $this->remainingViews = $remainingViews;
+        $this->secretUrl = $secretUrl;
     }
+
+
 }

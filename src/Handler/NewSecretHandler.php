@@ -6,13 +6,15 @@ use App\Entity\Secret;
 use App\Request\NewSecretRequest;
 use App\Response\SecretResponse;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 class NewSecretHandler extends AbstractSecretHandler
 {
     private EntityManagerInterface $entityManager;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(UrlGeneratorInterface $urlGenerator, EntityManagerInterface $entityManager)
     {
+        parent::__construct($urlGenerator);
         $this->entityManager = $entityManager;
     }
 
